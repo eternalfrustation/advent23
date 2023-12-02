@@ -1,5 +1,5 @@
 fn main() {
-    part1();
+    part2();
 }
 
 fn part2() {
@@ -9,44 +9,28 @@ fn part2() {
             .lines()
             .map(|l| l.unwrap())
             .map(|l| {
-                let mut firstIdx = usize::MAX;
-                let mut lastIdx = usize::MIN;
-                let mut first = 0;
-                let mut last = usize::MAX;
+                let mut l = l.clone();
                 for (i, num) in [
                     "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
                 ]
-                .iter()
+                .into_iter()
                 .enumerate()
                 {
-                    match l.find(num) {
-                        Some(num) => {
-                            if firstIdx > num {
-                                firstIdx = num;
-                                first = i + 1;
-                            } else if lastIdx < num {
-                                lastIdx = num;
-                                last = i + 1;
-                            }
-                        }
-                        None => {}
-                    }
+                    l = l.replace(num, format!("{}{}{}", num, i + 1, num).as_str())
                 }
 
-                let mut iterator = l.chars().enumerate().filter(|(_, c)| c.is_ascii_digit());
-                let firstTuple = iterator.next().unwrap();
-                if firstTuple.0 < firstIdx {
-                    first = firstTuple.1 as usize - '0' as usize
-                }
-                last = match iterator.last() {
-                    Some((i, c)) => i,
+                let mut iterator = l.chars().filter(|c| c.is_ascii_digit());
+                let first = iterator.next().unwrap();
+                let last = match iterator.last() {
+                    Some(l) => l,
                     None => first,
                 };
                 let mut digit = String::from(first);
                 digit.push(last);
-                digit.parse::<u32>().unwrap()
+                println!("{}\n{}", l, digit);
+                digit.parse::<usize>().unwrap()
             })
-            .sum::<u32>()
+            .sum::<usize>()
     )
 }
 
